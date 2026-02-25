@@ -1,16 +1,17 @@
 import random
 import smtplib
 from email.mime.text import MIMEText
-
+import os
 OTP_STORE = {}
 
 # ==============================
 # CHANGE THESE
 # ==============================
 
-EMAIL_ADDRESS = "putuislam4@gmail.com"
-APP_PASSWORD = "clzm nqnh drsd goor"
-
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
+if not EMAIL_ADDRESS or not APP_PASSWORD:
+    raise Exception("Email credentials not configured")
 
 # ==============================
 # SEND EMAIL
@@ -63,5 +64,6 @@ def verify_otp(email, otp):
     if stored == otp:
         del OTP_STORE[email]
         return True
+
 
     return False
