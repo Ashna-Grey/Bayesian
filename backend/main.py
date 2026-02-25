@@ -1,12 +1,12 @@
 from fastapi import FastAPI, Request
-from database import supabase
-from auth_utils import hash_password, verify_password
-from models import RegisterUser, LoginUser, OTPVerify
-from confidence_engine import *
-from otp_service import generate_otp, verify_otp
-from bayesian_engine import adaptive_posterior
-from learning_engine import learn_likelihoods
-from mouse_engine import extract_mouse_speed, mouse_score
+from backend.database import supabase
+from backend.auth_utils import hash_password, verify_password
+from backend.models import RegisterUser, LoginUser, OTPVerify
+from backend.confidence_engine import *
+from backend.otp_service import generate_otp, verify_otp
+from backend.bayesian_engine import adaptive_posterior
+from backend.learning_engine import learn_likelihoods
+from backend.mouse_engine import extract_mouse_speed, mouse_score
 
 import uuid
 from datetime import datetime, UTC
@@ -229,4 +229,5 @@ def verify_otp_login(data: OTPVerify):
     return {
         "message": decision,
         "confidence": confidence
+
     }
