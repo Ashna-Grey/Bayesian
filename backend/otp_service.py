@@ -10,60 +10,38 @@ OTP_STORE = {}
 
 EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
 APP_PASSWORD = os.environ.get("APP_PASSWORD")
-if not EMAIL_ADDRESS or not APP_PASSWORD:
-    raise Exception("Email credentials not configured")
-
 # ==============================
 # SEND EMAIL
 # ==============================
-
 def send_email(receiver, otp):
-
     msg = MIMEText(f"""
 Your Login OTP is:
-
 {otp}
-
 Do not share this code.
 """)
-
     msg["Subject"] = "Authentication OTP"
     msg["From"] = EMAIL_ADDRESS
     msg["To"] = receiver
-
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_ADDRESS, APP_PASSWORD)
         server.send_message(msg)
-
-
 # ==============================
 # GENERATE OTP
 # ==============================
-
 def generate_otp(email):
-
+    if not EMAIL_ADDRESS or not APP_PASSWORD:
+    raise Exception("Email credentials not configured")
     otp = str(random.randint(100000, 999999))
-
     OTP_STORE[email] = otp
-
     send_email(email, otp)
-
     print("OTP SENT TO:", email)
-
     return otp
-
-
 # ==============================
 # VERIFY OTP
 # ==============================
-
 def verify_otp(email, otp):
-
     stored = OTP_STORE.get(email)
-
     if stored == otp:
         del OTP_STORE[email]
         return True
-
-
     return False
