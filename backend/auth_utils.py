@@ -6,9 +6,10 @@ pwd_context = CryptContext(
 )
 
 def hash_password(password: str):
-    # bcrypt silently ignores after 72 bytes,
-    # so we manually slice string to 72 characters
+    password_bytes = password.encode("utf-8")[:72]
     return pwd_context.hash(password[:72])
 
 def verify_password(password: str, hashed: str):
+    password_bytes = password.encode("utf-8")[:72]
     return pwd_context.verify(password[:72], hashed)
+
