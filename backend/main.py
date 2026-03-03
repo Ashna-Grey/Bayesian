@@ -171,7 +171,12 @@ def login(user: LoginUser, request: Request):
         "session_id": session_id
     }
 
-
+@app.get("/check-env")
+def check_env():
+    return {
+        "EMAIL_USER": os.environ.get("EMAIL_USER", "NOT SET"),
+        "EMAIL_PASS": "SET" if os.environ.get("EMAIL_PASS") else "NOT SET"
+    }
 # =====================================================
 # OTP VERIFY
 # =====================================================
@@ -307,3 +312,4 @@ def verify_otp_login(data: OTPVerify):
         "confidence": safe_confidence,
         "session_token": session_token  # None if BLOCK
     }
+
