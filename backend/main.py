@@ -11,6 +11,12 @@ from backend.mouse_engine import extract_mouse_speed, mouse_score
 import uuid
 from datetime import datetime, UTC, timedelta
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 
 app = FastAPI()
@@ -277,4 +283,5 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
 
