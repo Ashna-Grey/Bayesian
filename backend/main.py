@@ -11,20 +11,27 @@ import uuid
 from datetime import datetime, UTC, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import logging
+import sys
+
+logging.basicConfig(
+    level=logging.DEBUG,   # DEBUG shows everything
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    stream=sys.stdout      # IMPORTANT for Render
+)
 app = FastAPI()
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    import traceback
-    logging.error("UNHANDLED ERROR")
+    logging.error("UNHANDLED EXCEPTION")
     logging.error(traceback.format_exc())
     return JSONResponse(
         status_code=500,
-        content={"error": str(exc)}
+        content={
+            "error": str(exc),
+            "type": type(exc).__name__
+        }
     )
-
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -287,6 +294,7 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
 
 
 
