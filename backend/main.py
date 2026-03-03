@@ -46,7 +46,8 @@ def register(user: RegisterUser):
         "email": user.email,
         "username": user.username,
         "password_hash": hash_password(user.password),
-        "trust_score": 0.5
+        "trust_score": 0.5,
+        "created_at": datetime.now(UTC).isoformat()
     }).execute()
 
     return {"message": "User Registered Successfully"}
@@ -276,3 +277,4 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
