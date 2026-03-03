@@ -6,10 +6,10 @@ pwd_context = CryptContext(
 )
 
 def hash_password(password: str):
-    password_bytes = password.encode("utf-8")[:72]
+    print("PASSWORD RECEIVED:", password)
+    print("TYPE:", type(password))
+    print("LENGTH:", len(password))
     return pwd_context.hash(password[:72])
 
 def verify_password(password: str, hashed: str):
-    password_bytes = password.encode("utf-8")[:72]
     return pwd_context.verify(password[:72], hashed)
-
