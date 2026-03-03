@@ -25,7 +25,7 @@ def adaptive_posterior(
     for key in evidence:
         legit = learned[f"{key}_legit"]
         attack = learned[f"{key}_attack"]
-        likelihood_ratio = legit / attack
+        likelihood_ratio = legit / max(attack, 1e-6)
         EVIDENCE_WEIGHT = 0.25
         log_belief += EVIDENCE_WEIGHT * math.log(likelihood_ratio)
     # ------------------------------
@@ -33,9 +33,11 @@ def adaptive_posterior(
     # ------------------------------
     continuous = [i, t, l, m]
     for val in continuous:
+        val = min(max(val, 0.01), 0.99)
         log_belief += 0.15 * math.log(
             (0.8 * val + 0.1) /
             (0.8 * (1 - val) + 0.1)
         )
     posterior = logodds_to_prob(log_belief)
+
     return round(posterior, 4)
