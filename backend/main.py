@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 import logging
 import sys
 import traceback
+import os
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -312,4 +313,5 @@ def verify_otp_login(data: OTPVerify):
         "confidence": safe_confidence,
         "session_token": session_token  # None if BLOCK
     }
+
 
