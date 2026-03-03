@@ -11,13 +11,17 @@ from backend.mouse_engine import extract_mouse_speed, mouse_score
 import uuid
 from datetime import datetime, UTC, timedelta
 from fastapi.middleware.cors import CORSMiddleware
-import logging
+from fastapi.responses import JSONResponse
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    import traceback
+    logging.error("UNHANDLED ERROR")
+    logging.error(traceback.format_exc())
+    return JSONResponse(
+        status_code=500,
+        content={"error": str(exc)}
+    )
 
 app = FastAPI()
 
@@ -283,5 +287,6 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
 
 
