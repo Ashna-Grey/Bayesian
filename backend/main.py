@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 import sys
+import traceback
 
 logging.basicConfig(
     level=logging.DEBUG,   # DEBUG shows everything
@@ -294,6 +295,7 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
 
 
 
