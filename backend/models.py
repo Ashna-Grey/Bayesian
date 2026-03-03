@@ -1,16 +1,19 @@
-from typing import List, Dict
-from pydantic import BaseModel
+from typing import List, Dict, Optional
+from pydantic import BaseModel, EmailStr
+
 class RegisterUser(BaseModel):
-    email: str
+    email: EmailStr
     username: str
     password: str
+
 class LoginUser(BaseModel):
-    email: str
+    email: EmailStr
     password: str
-    latitude: float
-    longitude: float
-    mouse: List[Dict]
+    latitude: Optional[float] = 0.0
+    longitude: Optional[float] = 0.0
+    mouse: Optional[List[Dict]] = []
+
 class OTPVerify(BaseModel):
-    email: str
+    email: EmailStr
     otp: str
     session_id: str
