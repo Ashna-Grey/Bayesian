@@ -98,6 +98,7 @@ def login(user: LoginUser, request: Request):
             "confidence_score": 0.1,
             "login_result": "BLOCK"
         }).execute()
+        return {"decision": "WRONG_PASSWORD"}
 
     # ---------- SCORES ----------
     p = password_score(password_ok)
@@ -231,3 +232,4 @@ def verify_otp_login(data: OTPVerify):
         "confidence": confidence
 
     }
+
