@@ -13,3 +13,4 @@ class LoginUser(BaseModel):
 class OTPVerify(BaseModel):
     email: str
     otp: str
+    session_id: str
