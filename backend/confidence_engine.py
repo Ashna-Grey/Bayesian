@@ -32,7 +32,7 @@ def location_score(lat, lon, history):
     coords = [
         (h["latitude"], h["longitude"])
         for h in history
-        if h["latitude"]
+        if h.get("latitude") is not None
     ]
     if not coords:
         return 1
@@ -54,4 +54,5 @@ def final_confidence(p,i,t,l,o):
         0.20*t +
         0.15*l +
         0.20*o
+
     )
