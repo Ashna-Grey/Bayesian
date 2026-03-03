@@ -7,11 +7,11 @@ from backend.otp_service import generate_otp, verify_otp
 from backend.bayesian_engine import adaptive_posterior
 from backend.learning_engine import learn_likelihoods
 from backend.mouse_engine import extract_mouse_speed, mouse_score
-
 import uuid
 from datetime import datetime, UTC, timedelta
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+app = FastAPI()
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -23,7 +23,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"error": str(exc)}
     )
 
-app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -287,6 +287,7 @@ def verify_otp_login(data: OTPVerify):
         "message": decision,
         "confidence": safe_confidence
     }
+
 
 
 
