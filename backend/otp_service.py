@@ -30,7 +30,7 @@ Do not share this code.
 # ==============================
 def generate_otp(email):
     if not EMAIL_ADDRESS or not APP_PASSWORD:
-    raise Exception("Email credentials not configured")
+        raise Exception("Email credentials not configured")
     otp = str(random.randint(100000, 999999))
     OTP_STORE[email] = otp
     send_email(email, otp)
@@ -45,3 +45,4 @@ def verify_otp(email, otp):
         del OTP_STORE[email]
         return True
     return False
+
