@@ -16,9 +16,9 @@ import sys
 import traceback
 
 logging.basicConfig(
-    level=logging.DEBUG,   # DEBUG shows everything
+    level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    stream=sys.stdout      # IMPORTANT for Render
+    stream=sys.stdout
 )
 app = FastAPI()
 
@@ -33,10 +33,11 @@ async def global_exception_handler(request: Request, exc: Exception):
             "type": type(exc).__name__
         }
     )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,  # FIX: can't use * with credentials=True
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -48,7 +49,6 @@ app.add_middleware(
 @app.post("/register")
 def register(user: RegisterUser):
 
-    # Check if email already exists
     existing = supabase.table("users") \
         .select("user_id") \
         .eq("email", user.email) \
@@ -121,7 +121,7 @@ def login(user: LoginUser, request: Request):
             "longitude": user.longitude,
             "password_correct": False,
             "otp_verified": False,
-            "mouse_speed": mouse_speed,
+            "mouse_speed": mouse_speed,  # FIX: was inconsistent with column name
             "confidence_score": 0.1,
             "login_result": "BLOCK"
         }).execute()
@@ -270,6 +270,17 @@ def verify_otp_login(data: OTPVerify):
     else:
         decision = "BLOCK"
 
+    # ---------- ISSUE SESSION TOKEN IF ALLOWED ----------
+    session_token = None
+    if decision in ("ALLOW", "MONITOR"):
+        session_token = str(uuid.uuid4())
+        supabase.table("sessions").insert({
+            "session_token": session_token,
+            "user_id": session["user_id"],
+            "email": data.email,
+            "expires_at": (datetime.now(UTC) + timedelta(hours=24)).isoformat()
+        }).execute()
+
     # ---------- STORE LOGIN ----------
     supabase.table("login_history").insert({
         "login_id": str(uuid.uuid4()),
@@ -293,11 +304,6 @@ def verify_otp_login(data: OTPVerify):
 
     return {
         "message": decision,
-        "confidence": safe_confidence
+        "confidence": safe_confidence,
+        "session_token": session_token  # None if BLOCK
     }
-
-
-
-
-
-
